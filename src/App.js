@@ -1,11 +1,21 @@
 import React, {useState} from 'react';
 import { nanoid } from "nanoid";
 import Form from "./components/Form";
-import Todo from "./components/Todo"
+import Todo from "./components/Todo";
+import FilterButton from "./components/FilterButton";
 
+const FILTER_MAP = {
+  All: () => true,
+  Active: task => !task.completed,
+  Completed: task => task.completed
+};
+
+const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 const App = (props) => {
   const [tasks, setTasks] = useState([{ id: "todo-0", name: "Sample task", completed: true }]);
+  const [filter, setFilter] = useState('All');
+
 
   function addTask(name){
     const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
@@ -27,8 +37,18 @@ const App = (props) => {
     setTasks(editedTaskList);
   }
 
+  function toggleTaskCompleted(id) {
+    const updatedTasks = tasks.map(task => {
+      if (id === task.id) {
+        return {...task, completed: !task.completed}
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+  }
 
-  const taskList = tasks.map(task => (
+
+  const taskList = tasks.filter(FILTER_MAP[filter]).map(task => (
     <Todo 
       key={task.id} 
       name = {task.name} 
@@ -36,14 +56,27 @@ const App = (props) => {
       id={task.id}
       deleteTask={deleteTask}
       editTask={editTask}
+      toggleTaskCompleted={toggleTaskCompleted}
     />      
     )
   );
 
+  const filterList = FILTER_NAMES.map(name => (
+    <FilterButton
+      data-testid= {name}
+      key={name}
+      name={name}
+      isPressed={name === filter}
+      setFilter={setFilter}
+    />
+  ));
+
   return (
     <div>
       <Form addTask={addTask}/>
-
+      <div>
+        {filterList}
+      </div>
       {taskList}
     </div>
   );

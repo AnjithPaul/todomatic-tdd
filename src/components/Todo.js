@@ -23,7 +23,7 @@ export default function Todo(props) {
         <label>
           New name for {props.name}
         </label>
-        <input data-testid="editField" type="text" value={newName} onChange={handleChange} />
+        <input data-testid="editField" id={props.id} type="text" value={newName} onChange={handleChange} />
       </div>
       
       <div>
@@ -44,10 +44,17 @@ export default function Todo(props) {
   const viewTemplate = (
       <div>
             <div>
-                <input id={props.id} type="checkbox" defaultChecked={props.completed} data-testid="taskName" value={props.name} />
-                    <label>
-                        {props.name}
-                    </label>
+                <input
+                    data-testid="checkbox"
+                    id={props.id} 
+                    type="checkbox" 
+                    defaultChecked={props.completed} 
+                    value={props.name}
+                    onChange={() => props.toggleTaskCompleted(props.id)} 
+                />
+                <label>
+                    {props.name}
+                </label>
             </div>
             <div>
                 <button data-testid="editButton"
