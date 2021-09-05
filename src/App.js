@@ -12,7 +12,7 @@ const FILTER_MAP = {
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
-const App = (props) => {
+const App = () => {
   const [tasks, setTasks] = useState([{ id: "todo-0", name: "Sample task", completed: true }]);
   const [filter, setFilter] = useState('All');
 
@@ -71,13 +71,23 @@ const App = (props) => {
     />
   ));
 
+  const tasksNoun = taskList.length !== 1 ? 'tasks' : 'task';
+  const headingText = `${taskList.length} ${tasksNoun} remaining`;
+
   return (
     <div>
+       <h1>TodoMatic</h1>
+
       <Form addTask={addTask}/>
+
       <div>
         {filterList}
       </div>
-      {taskList}
+      
+      <h2> {headingText} </h2>
+      <ul>
+        {taskList}
+      </ul>
     </div>
   );
 };
